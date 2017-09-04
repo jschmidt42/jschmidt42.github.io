@@ -14,7 +14,7 @@ The idea is to have a script engine that the game engine uses to operate the gam
 
 Minimally a main script looks like this:
 
-<pre lang="javascript">
+```js
 function init() {
     "use strict";
 
@@ -53,7 +53,7 @@ function shutdown() {
 	console.log('Called when the system is about to shutdown.');
 	console.warn('TODO: Do some cleanup.');
 }
-</pre>
+```
 
 The 4 functions defined above will be called by the engine at specific times. These are the only functions the engine will invoke explicitly. Everything else executed by the JavaScript VM will be called from the following functions and boot script.
 
@@ -65,7 +65,7 @@ If one of the following functions is not defined at start-up, the engine asserts
 
 Before running any scripts, we need to initialize V8 and register a few systems that will be used by the scripts.
 
-<pre lang="cpp">
+```cpp
 void ScriptEngine::InitializeV8()
 {
 	// Initialize V8.
@@ -125,29 +125,29 @@ void ScriptEngine::InitializeV8()
 	context->Global()->Set(String::NewFromUtf8(mIsolate, "clearTimeout"), 
         FunctionTemplate::New(mIsolate, ClearTimeout, mSelf)->GetFunction());
 }
-</pre>
+```
 
 Lets describe each sections.
 
 ## V8 initialization
 
-<pre lang="cpp">
-	V8::InitializeICU();
-	mPlatform = platform::CreateDefaultPlatform();
-	V8::InitializePlatform(mPlatform);
-	V8::Initialize();
-</pre>
+```cpp
+V8::InitializeICU();
+mPlatform = platform::CreateDefaultPlatform();
+V8::InitializePlatform(mPlatform);
+V8::Initialize();
+```
 
 These are the four main lines that initialize V8. These are the first call you need to make before doing anything with V8.
 
 ## Enable V8 debugging
 
-<pre lang="cpp">
+```cpp
 #if !defined(FINAL)
 	const char* v8Flags = "--debugger --expose_debug_as=v8debug";
 	V8::SetFlagsFromString(v8Flags, strlen(v8Flags));
 #endif
-</pre>
+```
 
 When the engine is compiled in development mode (Debug or Release) we make sure V8 enables debugging support. The `--expose_debug_as=v8debug` injects in the global context a variable named `v8debug` that can be used by the remote debugger to test some states. For instance Webstorm uses that variables to check the debugger's state.
 
@@ -155,44 +155,44 @@ When the engine is compiled in development mode (Debug or Release) we make sure 
 
 In order to allow V8 to allocate some memory, you need to define your own allocators.
 
-<pre lang="cpp">
-	// Define a custom allocator for V8 to allocate some memory when needed.
-	v8::V8::SetArrayBufferAllocator(new MallocArrayBufferAllocator);
-</pre>
+```cpp
+// Define a custom allocator for V8 to allocate some memory when needed.
+v8::V8::SetArrayBufferAllocator(new MallocArrayBufferAllocator);
+```
 
 `MallocArrayBufferAllocator` is defined by us:
 
-<pre lang="cpp">
+```cpp
 class MallocArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
 public:
 	virtual void* Allocate(size_t length) { return malloc(length); }
 	virtual void* AllocateUninitialized(size_t length) { return malloc(length); }
 	virtual void Free(void* data, size_t length) { free(data); }
 };
-</pre>
+```
 
 For the example we use a simple allocator, but you can think of something more complex and implement something to track V8 memory usage. You may not need an allocator if you only execute simple scripts, but as soon as you compile and evaluate bigger scripts, V8 will require one.
 
 In case you didn't register an allocator, V8 will crash with an error such as 
 
-<pre lang="txt">
+```
 #
 # Fatal error in ..\..\src\runtime.cc, line 801
 # CHECK(V8::ArrayBufferAllocator() != NULL) failed
 #
 First-chance exception at 0x00000000 in GameApp.exe: 0xC0000005: Access violation executing location 0x00000000.
 Unhandled exception at 0x77C70309 in GameApp.exe: 0xC0000005: Access violation executing location 0x00000000.
-</pre>
+```
 
 ## V8 Isolation
 
 The next step is to create an isolated V8 engine. In example, if your game engine has sandboxes, then each sandbox could have their own V8 isolate context. Here we have a single isolate context for the entire engine. Everything you do with V8 needs an isolated context so keep that member handy.
 
-<pre lang="cpp">
-	// Create a new Isolate and make it the current one.
-	mIsolate = Isolate::New();
-	mIsolate->Enter();
-</pre>
+```cpp
+// Create a new Isolate and make it the current one.
+mIsolate = Isolate::New();
+mIsolate->Enter();
+```
 
 Here we enter the isolation context right away and we only exit the isolation context when we shutdown the engine. There is no need to better scope the isolation context as we'll need V8 always ready for all steps, `init`, `update`, `render` to `shutdown`.
 
@@ -200,22 +200,22 @@ Here we enter the isolation context right away and we only exit the isolation co
 
 As soon as you need to create some handles, you need to create a handle scope so V8 can properly manage allocated variables.
 
-<pre lang="cpp">
-	// Create a stack-allocated handle scope.
-	HandleScope scope(mIsolate);
-</pre>
+```cpp
+// Create a stack-allocated handle scope.
+HandleScope scope(mIsolate);
+```
 
 In case you forgot to properly manage your scopes, V8 will give you a little reminder:
 
 
-<pre lang="txt">
+```
 #
 # Fatal error in D:\node\deps\v8\src/handles-inl.h, line 126
 # CHECK(current->level > 0) failed
 #
 First-chance exception at 0x00000000 in GameApp.exe: 0xC0000005: Access violation executing location 0x00000000.
 Unhandled exception at 0x77C70309 in GameApp.exe: 0xC0000005: Access violation executing location 0x00000000.
-</pre>
+```
 
 If you look at the callstack, you'll see that V8 is trying to get the current scope:
 
