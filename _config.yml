@@ -4,7 +4,35 @@ name: Jonathan Schmidt
 title: Coding, gaming, geeking and philosophizing
 description: Writing about software development and games
 
+# URL of your avatar or profile pic (you could use your GitHub profile pic)
+avatar: https://avatars3.githubusercontent.com/u/4054655?v=4&s=460
+
 # Includes an icon in the footer for each user name you enter
 footer-links:
   github: jschmidt42
   twitter: jschmidt42
+
+#
+# !! You don't need to change any of the configuration flags below !!
+#
+
+markdown: kramdown
+highlighter: pygments
+permalink: /:title/
+
+# Set the Sass partials directory, as we're using @imports
+sass:
+  sass_dir: _scss
+  style: :compressed
+
+# Use the following plug-ins
+gems:
+  - jemoji # Emoji please!
+  - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
+  - jekyll-redirect-from # Instead of 301 of alias redirects
+
+# Exclude these files from your production _site
+exclude:
+    - Gemfile
+    - Gemfile.lock
+    - README.md
