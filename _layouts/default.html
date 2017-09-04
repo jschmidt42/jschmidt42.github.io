@@ -47,7 +47,7 @@
             <div class="content col-md-6 col-md-offset-2" id="main" role="main">
                 {{ content }}
             </div>
-            <div class="content col-md-2">
+            <div id="listing" id="articles" class="content col-md-2 {% if page.id %}main{% else %}short{% endif %}">
                 <h2>Stuff I wrote</h2>
                 {% for post in site.posts  %}
                     {% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
