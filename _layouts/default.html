@@ -35,7 +35,7 @@
           <nav>
         {% endif %}
             <a href="{{ site.baseurl }}/about/">About</a>
-            <a href="{{ site.baseurl }}/">Blog</a>
+            <a href="{{ site.baseurl }}/">Home</a>
             <a href="http://github.com/{{ site.footer-links.github }}">Projects</a>
           </nav>
         </header>
@@ -78,9 +78,7 @@
       <div class="container">
         <footer class="footer">
           {% include svg-icons.html %}
-          {% if page.url != '/' %}
-            <br/><a href="#top">Back to Top</a>
-          {% endif %}
+          <br/><a href="#top">Back to Top</a>
         </footer>
       </div>
     </div>
