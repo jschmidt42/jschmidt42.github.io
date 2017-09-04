@@ -364,11 +364,9 @@ nav.short {
   margin-top: 0px;
 }
 
-#listing {
-  .short {
-    @include mobile {
-      display: none;
-    }
+#listing.short {
+  @include mobile {
+    display: none;
   }
 }
 
