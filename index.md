@@ -1,10 +1,8 @@
-# News
-
 ### New site!
 
 I am porting my old site to this new github.io blogging platform.
 
-### <http://skiptrafficjams.com>
+### Skip Traffic Jams
 
 I wrote that little web site in order to be alerted when traffic on a certain route is over.
 
