@@ -49,9 +49,9 @@
             </div>
 
           {% if page.id %}
-            <div id="listing" class="content col-md-2 main">
-          {% else %}
             <div id="listing" class="content col-md-2 short">
+          {% else %}
+            <div id="listing" class="content col-md-2 main">
           {% endif %}
                 <h2>Stuff I wrote</h2>
                 {% for post in site.posts  %}
