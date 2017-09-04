@@ -18,7 +18,7 @@ footer-links:
 #
 
 #markdown: rdiscount
-pygments: true
+#pygments: true
 permalink: /:title/
 
 # Set the Sass partials directory, as we're using @imports
