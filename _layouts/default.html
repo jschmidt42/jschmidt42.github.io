@@ -44,14 +44,14 @@
 
     <div id="wrap" class="container-fluid">
         <div class="row">
-            <div class="content col-md-6 col-md-offset-1" id="main" role="main">
+            <div class="content col-md-6 col-md-offset-2" id="main" role="main">
                 {{ content }}
             </div>
 
           {% if page.id %}
-            <div id="listing" class="content col-md-4 short">
+            <div id="listing" class="content col-md-3 short">
           {% else %}
-            <div id="listing" class="content col-md-4 main">
+            <div id="listing" class="content col-md-3 main">
           {% endif %}
                 <h2>Stuff I wrote</h2>
                 {% for post in site.posts  %}
