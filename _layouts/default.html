@@ -23,6 +23,8 @@
           <a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.avatar }}" /></a>
           
           <h1 class="site-description"><a href="{{ site.baseurl }}/">{{ site.description }}</a></h1>
+
+          <a name="top"></a>
           
           <nav>
             <a href="{{ site.baseurl }}/about/">About</a>
@@ -69,6 +71,9 @@
       <div class="container">
         <footer class="footer">
           {% include svg-icons.html %}
+          {% if page.url == "/index.html" %}
+            <br/><a href="#top">Back to Top</a>
+          {% endif %}
         </footer>
       </div>
     </div>
