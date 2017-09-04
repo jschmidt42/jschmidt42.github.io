@@ -219,13 +219,13 @@ Unhandled exception at 0x77C70309 in GameApp.exe: 0xC0000005: Access violation e
 
 If you look at the callstack, you'll see that V8 is trying to get the current scope:
 
-<pre lang="txt">
+```
 >	GameApp.exe!v8::base::OS::Abort() Line 831	C++
  	GameApp.exe!V8_Fatal(const char * file, int line, const char * format, ...) Line 88	C++
  	GameApp.exe!v8::internal::HandleScope::CloseAndEscape<v8::internal::Context>(v8::internal::Handle<v8::internal::Context> handle_value) Line 126	C++
  	GameApp.exe!v8::Context::New(v8::Isolate * external_isolate, v8::ExtensionConfiguration * extensions, v8::Handle<v8::ObjectTemplate> global_template, v8::Handle<v8::Value> global_object) Line 5170	C++
  	GameApp.exe!ScriptEngine::InitializeV8() Line 164	C++
-</pre>
+```
 
 So when you get these, just add `HandleScope scope(mIsolate);` and you should be set.
 
@@ -233,12 +233,12 @@ So when you get these, just add `HandleScope scope(mIsolate);` and you should be
 
 When you are to evaluate JavaScript code, you need to define a context. In our case we create a global context that we persist for the entire session:
 
-<pre lang="cpp">
+```cpp
 	// Create a new context.
 	Local<v8::Context> context = Context::New(mIsolate);
 	mGlobalContext.Reset(mIsolate, context);
 	Context::Scope contextScope(context);
-</pre>
+```
 
 `mGlobalContext` is a persistent context defined as `v8::Persistent<v8::Context>`.
 
@@ -246,7 +246,7 @@ A persistent template is an object reference that is independent of any handle s
 
 Persistent objects are a bit tricky to access when needed as locals (e.g. `Local<Value>`). To do so, I have create some helper functions.
 
-<pre lang="cpp">
+```cpp
 	template <class TypeName>
 	inline v8::Local<TypeName> StrongPersistentToLocal(
         const v8::Persistent<TypeName>& persistent)
@@ -262,11 +262,11 @@ Persistent objects are a bit tricky to access when needed as locals (e.g. `Local
 		return *reinterpret_cast<const v8::Local<TypeName>*>(
             const_cast<const v8::Persistent<TypeName>*>(&persistent));
 	}
-</pre>
+```
 
 You call `StrongPersistentToLocal` when you need to access persistent objects. In example, we use that function whenever we need to get the global context:
 
-<pre lang="cpp">
+```cpp
 	v8::Local<v8::Context> Context() { return StrongPersistentToLocal(mGlobalContext); }
 	v8::Local<v8::Context> Context() const { return StrongPersistentToLocal(mGlobalContext); }
 
@@ -277,30 +277,30 @@ You call `StrongPersistentToLocal` when you need to access persistent objects. I
 		v8::Context::Scope contextScope(Context());
 		///...
 	}
-</pre>
+```
 
 ## Expose script engine to V8
 
 In the following snippet we expose the `ScriptEngine` singleton to V8. `Handle<ObjectTemplate> t = ObjectTemplate::New()` creates an new type of object that can be instantiated. `t->SetInternalFieldCount(1)` tells V8 that there is gonna be one internal value to this object. This value can't be used in the JavaScript code. Then we create an instance of that object `mSelf = t->NewInstance()` and we store the pointer `this` to that created object. We will retrieve that value later in the implementation of global functions such as `setTimeout` and `require`.
 
-<pre lang="cpp">
+```cpp
 	// Create local to self
 	Handle<ObjectTemplate> t = ObjectTemplate::New();
 	t->SetInternalFieldCount(1);
 	mSelf = t->NewInstance();
 	mSelf->SetInternalField(0, External::New(mIsolate, this));
-</pre>
+```
 
 ## Starts the debugging socket server
 
 Here we start the debugging socket server to listen to V8 debugging commands. The socket server is created and ran in another thread. 
 
-<pre lang="cpp">
+```cpp
 	// Enable the debugger thread to support remote debugging.
 	v8::Debug::SetMessageHandler(DebuggerAgentMessageHandler);
 	v8::Debug::SetDebugEventListener(HandleDebugEventCallback, mSelf);
 	mDebuggerThread.EnqueueFunctionCall(FunctionCall(&ScriptEngine::DebuggerThread, *this));
-</pre>
+```
 
 Later we'll see how the debugger thread is implemented.
 
@@ -308,7 +308,7 @@ Later we'll see how the debugger thread is implemented.
 
 The next section expose to the JavaScript code all the APIs we want.
 
-<pre lang="cpp">
+```cpp
 	// Expose main systems to the scripts
 	Console::Create(mIsolate, context);
 	ScriptWorldCore::Create(mIsolate, context);
@@ -319,7 +319,7 @@ The next section expose to the JavaScript code all the APIs we want.
 	ScriptEntity::Create(mIsolate, context);
 	ScriptComponent::Create(mIsolate, context);
 	...
-</pre>
+```
 
 `Console::Create(mIsolate, context)` creates the `console` object in the global context. 
 
@@ -347,7 +347,7 @@ We will see below how these are constructed and registered.
 
 Finally in the initialization method we register common global function used in JavaScript such as `setTimeout`, `clearTimeout`, `require`, etc.
 
-<pre lang="cpp">
+```cpp
 	// Defines common JavaScript global functions
 	context->Global()->Set(String::NewFromUtf8(mIsolate, "require"), 
         FunctionTemplate::New(mIsolate, Require, mSelf)->GetFunction());
@@ -355,7 +355,7 @@ Finally in the initialization method we register common global function used in 
         FunctionTemplate::New(mIsolate, SetTimeout, mSelf)->GetFunction());
 	context->Global()->Set(String::NewFromUtf8(mIsolate, "clearTimeout"), 
         FunctionTemplate::New(mIsolate, ClearTimeout, mSelf)->GetFunction());
-</pre>
+```
 
 We create function template to instantiate the functions. Once created the functions are added to the global context so these are available from any scripts.
 
@@ -363,7 +363,7 @@ We create function template to instantiate the functions. Once created the funct
 
 Some objects are set on the global context directly such as the `console`. To do so we create a new object template and add function members to it. When all members are set, we push that object to the global context and give it a name.
 
-<pre lang="cpp">
+```cpp
 void Console::Create(Isolate* isolate, Local<Context> context)
 {
 	Handle<ObjectTemplate> console = ObjectTemplate::New(isolate);
@@ -371,11 +371,11 @@ void Console::Create(Isolate* isolate, Local<Context> context)
 	...
 	context->Global()->Set(String::NewFromUtf8(isolate, "console"), console->NewInstance());
 }
-</pre>
+```
 
 For each function, when called from the JavaScript code, V8 calls our C++ code in order to do something. In example, for the `log` method of the `console` object, V8 calls our Print callback.
 
-<pre lang="cpp">
+```cpp
 void Console::Print(const FunctionCallbackInfo<Value>& args)
 {
 	StringBuilder sb;
@@ -391,7 +391,7 @@ void Console::Print(const FunctionCallbackInfo<Value>& args)
 
 	args.GetReturnValue().Set(args.Holder());
 }
-</pre>
+```
 
 All the callbacks our static function.
 
@@ -399,7 +399,7 @@ All the callbacks our static function.
 
 Global functions are set on the global context just like the `console` object.
 
-<pre lang="cpp">
+```cpp
 void ScriptEngine::SetTimeout(const FunctionCallbackInfo<Value>& args)
 {
 	VCN_ASSERT(args.Length() >= 2);
@@ -421,29 +421,29 @@ void ScriptEngine::SetTimeout(const FunctionCallbackInfo<Value>& args)
 
 	args.GetReturnValue().Set(Number::New(args.GetIsolate(), timeoutId));
 }
-</pre>
+```
 
 These are still static function, but the difference with the Print function above is that here we have access to the script engine instance. Do you remember when we've defined the `self` object?
 
-<pre lang="cpp">
+```cpp
 	Handle<ObjectTemplate> t = ObjectTemplate::New();
 	t->SetInternalFieldCount(1);
 	mSelf = t->NewInstance();
 	mSelf->SetInternalField(0, External::New(mIsolate, this));
-</pre>
+```
 
 That was to pass this data object to the registration of the global functions.
 
-<pre lang="cpp">
+```cpp
 	context->Global()->Set(String::NewFromUtf8(mIsolate, "setTimeout"), 
         FunctionTemplate::New(mIsolate, SetTimeout, mSelf)->GetFunction());
-</pre>
+```
 
 So when we've passed the `mSelf` object when registering `setTimeout`, V8 kept that object so it can pass it back to the callback. That is why in the `SetTimeout` callback code have `ScriptEngine* scriptInterface = GetDataScriptInterface(args)`.
 
 The `GetDataScriptInterface` function extract the `this` from the function arguments.
 
-<pre lang="cpp">
+```cpp
 ScriptEngine* ScriptEngine::GetDataScriptInterface(const FunctionCallbackInfo<Value>& args)
 {
 	return GetDataScriptInterface(args.Data());
@@ -455,11 +455,11 @@ ScriptEngine* ScriptEngine::GetDataScriptInterface(Local<Value> data)
 	Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
 	return static_cast<ScriptEngine*>(wrap->Value());
 }
-</pre>
+```
 
 Global function can be used in any scripts at anytime without using `require`. Here's a small snippet that uses `setTimeout`.
 
-<pre lang="javascript">
+```js
 	if (setTimeout) {
 		console.log("setTimeout exists");
 
@@ -467,13 +467,13 @@ Global function can be used in any scripts at anytime without using `require`. H
 			console.log('Called after 2 seconds');
 		}, 2000);
 	}
-</pre>
+```
 
 # API - Constructors Wrappers
 
 Constructors is a way to expose to JavaScript classes that can be created on the JS side. In example we want to be able to do this in JavaScript:
 
-<pre lang="javascript">
+```js
 function initializeCameraPosition(camera) {
 	var cameraPosition = new Vector3(22, 42, 24.5);
 	camera.position = cameraPosition;
@@ -483,13 +483,13 @@ function initializeCameraPosition(camera) {
 	camera.direction.y = 8.42f;
 	camera.normalize();
 }
-</pre>
+```
 
 In the example above we need two constructors API. One for Vector3 and Camera. All these constructors could be entirely coded in JavaScript using normal constructs, but since Camera and Vector are objects that are also used by the C++ engine, we need to have them declared in the C++ as V8 wrappers.
 
 Here's how this is done for a simple Vector3. You'll see how fields and methods are defined. But first, to ease the wrapping of C++ classes, we have a `ScriptObjectWrapper` that is used as a base class.
 
-<pre lang="cpp">
+```cpp
 class ScriptObjectWrap
 {
 public:
@@ -599,11 +599,11 @@ private:
 
 	v8::Persistent<v8::Object> _handle;
 };
-</pre>
+```
 
 Then `ScriptVector3` is defined as:
 
-<pre lang="cpp">
+```cpp
 class ScriptVector3 : public ScriptObjectWrap
 {
 public:
@@ -726,7 +726,7 @@ private: // Data
 
 	Vector3 _vec;
 };
-</pre>
+```
 
 These wrappers can be a pain to do if you have a lot of classes to wraps so I suggest you find an automated process if possible. Maybe a mocing process would be nice to generate these wrappers using a MACRO system like QT. 
 
@@ -736,12 +736,12 @@ Core systems are a bit special. In Engine42, each core system is a singleton tha
 
 In example, to get the rendering core system, you would use `require` like this:
 
-<pre lang="javascript">
+```js
 function() {
 	var renderer = require('renderer');
 	renderer.drawText(...);
 }
-</pre>
+```
 
 If you call `require('renderer')` multiple time, the same renderer core system instance will be returned. The first time `require('renderer')` is called, the object wrapper is created and cached for the entire session. That said, on the C++ side, core module are normal script object wrapper defined like the `ScriptVector3` class above. The only difference is that, these classes `::New*()` methods don't create a new instances of the core module but return the singleton instance.
 
@@ -751,11 +751,11 @@ It wouldn't be nice to code your entire game in a single JavaScript file, so thi
 
 For example, you can do something like this in Boot.js
 
-<pre lang="javascript">
+```js
 var _ = require('Scripts/Core/lodash'),
     StateMachine = require('Scripts/StateMachine'),
 	entityCore = require('entity');
-</pre>
+```
 
 This example shows three different way of loading a module.
 
@@ -765,7 +765,7 @@ This example shows three different way of loading a module.
 
 `Scripts/StateMachine.js` is defined as:
 
-<pre lang="javascript">
+```js
 function StateMachine() {
 	this._states = [];
 }
@@ -777,14 +777,14 @@ StateMachine.prototype.states = function () {
 }
 
 module.exports = StateMachine;
-</pre> 
+``` 
 
 So as you can see, everything you set in the `module.exports` object is exported to the caller. In practice here's what happens:
 
 - `require` loads the JavaScript file content and stores it in a string buffer.
 - Once the file is loaded, we wrap the file content in a special function that we will compile and evaluate.
 
-<pre lang="javascript">
+```js
 (function (__scriptFilePath) {
 	var module = {
 		exports: {}
@@ -794,7 +794,7 @@ So as you can see, everything you set in the `module.exports` object is exported
 
 	return module.exports;
 }());
-</pre>
+```
 
 This way we make sure that nothing in the loaded script leaks in the global namespace and it allows us to easily catch what is exported in `module.exports`.
 
@@ -806,7 +806,7 @@ Note that once a script is loaded, the exported module is cached in memory so th
 
 V8 is initialized, we can load as many scripts as we want and all the API is exposed to V8. Now is the time to boot the machine. The boot method, loads the main script `Boot.js`, gets  persistent references to the `init`, `update`, `render` and `shutdown` function and calls `init()`. Once your game engine is initialize, you just need to call `ScriptEngine::Boot()` and you are set.
 
-<pre lang="cpp">
+```cpp
 void ScriptEngine::Boot()
 {
 	HandleScope handle_scope(mIsolate);
@@ -834,7 +834,7 @@ void ScriptEngine::Boot()
 	Handle<Value> args[1];
 	func->Call(func->CreationContext()->Global(), 0, args);
 }
-</pre>
+```
 
 Last four lines is the part that calls the JS `init()` method defined by the user in the main script.
 
@@ -844,7 +844,7 @@ Update and render are called each frame to let the user update and render his ga
 
 The `Update()` method does a bit more than just calling the `update` JS function. It manages the `setTimeout`, making sure that when a `setTimeout` times out it calls the JS callback.
 
-<pre lang="cpp">
+```cpp
 bool ScriptEngine::Update(const float elapsedTime)
 {
 	HandleScope scope(_isolate);
@@ -891,7 +891,7 @@ void ScriptEngine::Render() const
 	Handle<Value> args[1];
 	func->Call(func->CreationContext()->Global(), 0, args);
 }
-</pre>
+```
 
 If you want to see how `setTimeout` callbacks are persisted, check the full source code below.
 
@@ -911,7 +911,7 @@ To allow remote debugging we need to have a socket server that listens to the de
 
 Here the socket server debug thread code:
 
-<pre lang="cpp">
+```cpp
 void ScriptEngine::DebuggerThread()
 {
 	WSADATA wsaData = {0};
@@ -1004,7 +1004,7 @@ void ScriptEngine::DebuggerThread()
 
 	WSACleanup();
 }
-</pre>
+```
 
 The `ScriptEngineClientData` is used for the debug message handler to know which connection to forward the information too.
 
@@ -1022,7 +1022,7 @@ The debugging thread is composed of the following steps:
 
 Getting debug client request is trivial, you just need to read the client socket for a complete JSON message. First we read the message header that tells use what is the size of the message. The message length can be used to do some validation. Once we know the size of the message, then we read that amount of bytes to get all the stringify JSON object.
 
-<pre lang="cpp">
+```cpp
 VCNString GetRequest(int socket)
 {
 	int received;
@@ -1109,15 +1109,15 @@ VCNString GetRequest(int socket)
 
 	return buffer;
 }
-</pre>
+```
 
 Messages are usually composed of
 
-<pre lang="txt">
+```
 Content Length: XXXXX
 \r\n
 {.....}
-</pre>
+```
 
 The content length is in bytes.
 
@@ -1127,26 +1127,26 @@ And when V8 calls your debug message handler, you just need to dispatch to the d
 
 The message has the follow form:
 
-<pre lang="txt">
+```
 Content Length: XXXXX
 \r\n
 {.....}
-</pre>
+```
 
 The handler is:
 
-<pre lang="cpp">
+```cpp
 void ScriptEngine::DebuggerAgentMessageHandler(const Debug::Message& message)
 {
 	ScriptEngineClientData* cd = static_cast<ScriptEngineClientData*>(message.GetClientData());
 	String::Utf8Value val(message.GetJSON());
 	SendMessage(cd->socket, *val);
 }
-</pre>
+```
 
 And send message is implemented as:
 
-<pre lang="cpp">
+```cpp
 void SendMessage(int conn, const VCNString& message)
 {
 	// Send the header.
@@ -1158,7 +1158,7 @@ void SendMessage(int conn, const VCNString& message)
 	// Send message body as UTF-8.
 	SendBuffer(conn, message);
 }
-</pre>
+```
 
 ## Webstorm use case
 
@@ -1191,7 +1191,7 @@ Thanks
 
 ## ScriptEngine.h
 
-<pre lang="cpp">
+```cpp
 ///
 /// Copyright (C) 2015 - All Rights Reserved
 /// All rights reserved. http://www.equals-forty-two.com
@@ -1308,11 +1308,11 @@ private:
 
 	static int _main_debug_client_socket;
 };
-</pre>
+```
 
 ## ScriptEngine.cpp
 
-<pre lang="cpp">
+```cpp
 ///
 /// Copyright (C) 2015 - All Rights Reserved
 /// All rights reserved. http://www.equals-forty-two.com
@@ -2247,11 +2247,11 @@ void ScriptEngine::DebuggerThread()
 
 	WSACleanup();
 }
-</pre>
+```
 
 ## ScriptConsole.h
 
-<pre lang="cpp">
+```cpp
 ///
 /// Copyright (C) 2015 - All Rights Reserved
 /// All rights reserved. http://www.equals-forty-two.com
@@ -2282,11 +2282,11 @@ private:
 
 	static string StringifyArguments(const v8::FunctionCallbackInfo<v8::Value>& args, int start = 0, int end = -1);
 };
-</pre>
+```
 
 ## ScriptConsole.cpp
 
-<pre lang="cpp">
+```cpp
 ///
 /// Copyright (C) 2015 - All Rights Reserved
 /// All rights reserved. http://www.equals-forty-two.com
@@ -2361,11 +2361,11 @@ string Console::StringifyArguments(const FunctionCallbackInfo<Value>& args, int 
 
 	return sb.str();
 }
-</pre>
+```
 
 ## main.js (example)
 
-<pre lang="javascript">
+```js
 ///
 /// Copyright (C) 2015 - All Rights Reserved
 /// All rights reserved. http://www.equals-forty-two.com
@@ -2445,4 +2445,4 @@ function shutdown() {
     'use strict';
     console.log('Shutdown');
 }
-</pre>
+```
