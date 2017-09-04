@@ -3,3 +3,8 @@ theme: jekyll-theme-minimal
 name: Jonathan Schmidt
 title: Coding, gaming, geeking and philosophizing
 description: Writing about software development and games
+
+# Includes an icon in the footer for each user name you enter
+footer-links:
+  github: jschmidt42
+  twitter: jschmidt42
