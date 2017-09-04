@@ -3,7 +3,12 @@
 /* SYNTAX HIGHLIGHTING */
 /***********************/
  
-.highlight  { background: #ffffff; }
+.highlight  { 
+  background: #ffffff;
+  font-family: monospace !important;
+  font-size: 12px !important;
+  line-height: 16px !important;
+}
 .highlight .c { color: #999988; font-style: italic } /* Comment */
 .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .highlight .k { font-weight: bold } /* Keyword */
