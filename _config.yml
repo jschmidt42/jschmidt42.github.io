@@ -17,7 +17,7 @@ footer-links:
 #
 
 markdown: kramdown
-highlighter: pygments
+highlighter: rouge
 permalink: /:title/
 
 # Set the Sass partials directory, as we're using @imports
