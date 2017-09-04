@@ -1,5 +1,3 @@
-theme: jekyll-theme-minimal
-
 name: equals-forty-two.com
 title: Coding, gaming, geeking and philosophizing
 description: My name is Jonathan Schmidt and I'm from Montréal. I am a passionate software developer, geek and father of two lovely children.
@@ -14,12 +12,11 @@ footer-links:
   linkedin: jonathan-schmidt-05b6413
 
 #
-# !! You don't need to change any of the configuration flags below !!
-#
 
-#markdown: rdiscount
-#pygments: true
-permalink: /:title/
+markdown: rdiscount
+pygments: true
+#permalink: /:title/
+#theme: jekyll-theme-minimal
 
 # Set the Sass partials directory, as we're using @imports
 sass:

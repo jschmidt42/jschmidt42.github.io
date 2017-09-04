@@ -2,25 +2,6 @@
 /***********************/
 /* SYNTAX HIGHLIGHTING */
 /***********************/
-
-.highlight { 
-  background-color: #f1f1f1;
-  padding: 5px 10px;
-  margin: 20px 0;
-}
-
-.highlight pre {
-  // overflow: scroll; // Prefer no word wrap? Uncomment this line and comment out the 2 lines below.
-  word-break: break-all;
-  word-wrap: break-word;
-}
- 
-code {
-  font-family: 'Courier', monospace;
-  font-size: 12px;
-  line-height: 1;
-  color: #222;
-}
  
 .highlight  { background: #ffffff; }
 .highlight .c { color: #999988; font-style: italic } /* Comment */
