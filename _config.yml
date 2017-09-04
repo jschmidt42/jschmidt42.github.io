@@ -13,8 +13,9 @@ footer-links:
 
 #
 
-markdown: rdiscount
-pygments: true
+markdown: kramdown
+highlighter: rouge
+#pygments: true
 #permalink: /:title/
 #theme: jekyll-theme-minimal
 
@@ -25,6 +26,8 @@ sass:
 
 # Use the following plug-ins
 gems:
+  - kramdown 
+  - rouge
   - jemoji # Emoji please!
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jekyll-redirect-from # Instead of 301 of alias redirects
