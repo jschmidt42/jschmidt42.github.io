@@ -19,9 +19,7 @@
         <header class="masthead clearfix">
           <a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.avatar }}" /></a>
           
-          <h1 class="site-description"><a href="{{ site.baseurl }}/">
-            My name is Jonathan Schmidt and I'm from Québec. I am a passionate software developer, boardgame geek and father of two lovely children. Codes for fun!
-          </a></h1>
+          <h1 class="site-description"><a href="{{ site.baseurl }}/">{{ site.description }}</a></h1>
           
           <nav>
             <a href="{{ site.baseurl }}/about/">About</a>
@@ -32,47 +30,53 @@
       </div>
     </div>
 
-    <div id="main" role="main">
-        {{ content }}
-    </div>
-
-    <div>
-            {% assign currentYear = site.time | date: "%Y" %}
-            {% assign currentMonth = site.time | date: "%B" %}
-            {% for post in site.posts %}
-                
-                {% assign postYear = post.date | date: "%Y" %}
-                {% assign postMonth = post.date  | date: "%B" %}
-                
-                {% if forloop.first %}
-                <li> {{ postYear}}
-                    <ul>
-                        <li> {{ postMonth }}
-                            <ul>
-                {% endif %}
-                
-                {% if (postYear == currentYear and postMonth == currentMonth) or forloop.first %}
-                    <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
-                {% endif %}
-                
-                {% if postYear == currentYear and postMonth != currentMonth %}
-                    </ul></li>
-                    <li> {{ postMonth }}
-                        <ul>
+    <div id="wrap" class="container-fluid">
+        <div class="row">
+            <div class="content col-md-6 col-md-offset-2" id="main" role="main">
+                {{ content }}
+            </div>
+            <div class="content col-md-2">
+                <h2>Archive</h2>
+                <ul>
+                    {% assign currentYear = site.time | date: "%Y" %}
+                    {% assign currentMonth = site.time | date: "%B" %}
+                    {% for post in site.posts %}
+    
+                        {% assign postYear = post.date | date: "%Y" %}
+                        {% assign postMonth = post.date  | date: "%B" %}
+    
+                        {% if forloop.first %}
+                        <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}" aria-expanded="false" aria-controls="collapse{{ postYear }}">{{ postYear}}</a>
+                            <ul class="collapse in" id="collapse{{ postYear }}">
+                                <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}{{ postMonth }}" aria-expanded="false" aria-controls="collapse{{ postYear }}{{ postMonth}}">{{ postMonth}}</a>
+                                    <ul class="collapse in" id="collapse{{ postYear }}{{ postMonth }}">
+                        {% endif %}
+    
+                        {% if (postYear == currentYear and postMonth == currentMonth) or forloop.first %}
                             <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
-                {% endif %}
-                
-                {% if postYear != currentYear %}
-                    </ul></li></ul></li>
-                        <li> {{ postYear}}
-                            <ul>
-                                <li> {{ postMonth }}
-                                    <ul>
-                                        <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
-                {% endif %}
-                {% assign currentYear = postYear %}
-                {% assign currentMonth = postMonth %}
-            {% endfor %}
+                        {% endif %}
+    
+                        {% if postYear == currentYear and postMonth != currentMonth %}
+                            </ul></li>
+                                <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}{{ postMonth }}" aria-expanded="false" aria-controls="collapse{{ postYear }}{{ postMonth}}">{{ postMonth}}</a>
+                                    <ul class="collapse" id="collapse{{ postYear }}{{ postMonth }}">
+                                    <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
+                        {% endif %}
+    
+                        {% if postYear != currentYear %}
+                            </ul></li></ul></li>
+                            <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}" aria-expanded="false" aria-controls="collapse{{ postYear }}">{{ postYear}}</a>
+                                <ul class="collapse" id="collapse{{ postYear }}">
+                                    <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}{{ postMonth }}" aria-expanded="false" aria-controls="collapse{{ postYear }}{{ postMonth}}">{{ postMonth}}</a>
+                                        <ul class="collapse" id="collapse{{ postYear }}{{ postMonth }}">
+                                            <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
+                        {% endif %}
+                        {% assign currentYear = postYear %}
+                        {% assign currentMonth = postMonth %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div class="wrapper-footer">
