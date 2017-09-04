@@ -320,7 +320,7 @@ form {
   }
 
   a {
-    color: white;
+    color: $lightGray;
   }
   
   @include mobile {
@@ -358,6 +358,10 @@ nav {
     font-size: 13px;
     color: $lighterGray;
   }
+}
+
+nav.short {
+  margin-top: 0px;
 }
 
 //

@@ -29,7 +29,11 @@
             <h1 class="site-description"><a href="{{ site.baseurl }}/">{{ site.description }}</a></h1>
           {% endif %}
           
+        {% if page.id %}
+          <nav class="short">
+        {% else %}
           <nav>
+        {% endif %}
             <a href="{{ site.baseurl }}/about/">About</a>
             <a href="{{ site.baseurl }}/">Blog</a>
             <a href="http://github.com/{{ site.footer-links.github }}">Projects</a>
