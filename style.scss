@@ -383,13 +383,13 @@ nav.short {
 }
 
 .col-md-offset-2 {
-  @media (max-width: 670px) and (max-width: 1025px) {
+  @media (min-width: 670px) and (max-width: 1025px) {
     margin-left: 5%;
   }
 }
 
 .col-md-6 {
-  @media (max-width: 670px) and (max-width: 1025px) {
+  @media (min-width: 670px) and (max-width: 1025px) {
     width: 65%;
   }
 }
