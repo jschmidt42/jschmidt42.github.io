@@ -394,6 +394,18 @@ nav.short {
   }
 }
 
+.col-md-offset-2 {
+  @media (min-width: 670px) {
+    margin-left: 2%;
+  }
+}
+
+.col-md-6 {
+  @media (min-width: 670px) {
+    width: 98%;
+  }
+}
+
 .portfolio {
 
   h1, .date {
