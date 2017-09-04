@@ -20,9 +20,11 @@
     <div class="wrapper-masthead">
       <div class="container">
         <header class="masthead clearfix">
-          <a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.avatar }}" /></a>
-          
-          <h1 class="site-description"><a href="{{ site.baseurl }}/">{{ site.description }}</a></h1>
+
+          {% if page.id != 'index' %}
+            <a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.avatar }}" /></a>
+            <h1 class="site-description"><a href="{{ site.baseurl }}/">{{ site.description }}</a></h1>
+          {% endif %}
 
           <a name="top"></a>
           
@@ -71,7 +73,7 @@
       <div class="container">
         <footer class="footer">
           {% include svg-icons.html %}
-          {% if page.url == "/index.html" %}
+          {% if page.id != 'index' %}
             <br/><a href="#top">Back to Top</a>
           {% endif %}
         </footer>
