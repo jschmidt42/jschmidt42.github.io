@@ -7,7 +7,12 @@
   background: #ffffff;
   font-family: monospace !important;
   font-size: 12px !important;
-  line-height: 16px !important;
+  line-height: 14px !important;
+
+  @media (max-width: 770px) {
+    font-size: 8px !important;
+    line-height: 10px !important;
+  }
 }
 .highlight .c { color: #999988; font-style: italic } /* Comment */
 .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
