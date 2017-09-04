@@ -1,6 +1,7 @@
 ---
 layout: post
 title: V8 integration in a game engine
+category: code
 tags: [v8, game, engine, javascript, debugger]
 ---
 
