@@ -1169,17 +1169,17 @@ The workflow is easy. Launch the game engine, once the debugger thread is active
 - Launch the game engine.
 - Start Webstorm, go to Run > Edit Configurations...
 - Add a new one and use Node.js remote debugging (since node.js use the standard V8 debugging protcol that is exactly what we want)
-<a href="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_03_48-Run_Debug-Configurations.png"><img src="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_03_48-Run_Debug-Configurations.png" alt="2015-03-05 12_03_48-Run_Debug Configurations" width="308" height="554" class="alignnone size-full wp-image-663" /></a>
+![2015-03-05-12_03_48-Run_Debug-Configurations](/images/2015-03-05-12_03_48-Run_Debug-Configurations.png)
 - Set any name you want set Host to be `localhost`.
 - Set port to be 42000.
-<a href="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_05_54-Run_Debug-Configurations.png"><img src="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_05_54-Run_Debug-Configurations.png" alt="2015-03-05 12_05_54-Run_Debug Configurations" width="1092" height="694" class="alignnone size-full wp-image-664" /></a>
+![2015-03-05-12_05_54-Run_Debug-Configurations](/images/2015-03-05-12_05_54-Run_Debug-Configurations.png)
 - Press OK to save settings
 - Press the debug icon.
-<a href="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_06_48-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png"><img src="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_06_48-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png" alt="2015-03-05 12_06_48-Stingray - [D__Engine42-WS] - D__Engine42_Game_Data_Boot.js - WebStorm 9.0.3" width="194" height="114" class="alignnone size-full wp-image-665" /></a>
+![2015-03-05-12_06_48-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3](/images/2015-03-05-12_06_48-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png)
 - Once connected, you'll the loaded scripts and the Connected to 127.0.0.1:42000 message.
-<a href="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_08_00-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png"><img src="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_08_00-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png" alt="2015-03-05 12_08_00-Stingray - [D__Engine42-WS] - D__Engine42_Game_Data_Boot.js - WebStorm 9.0.3" width="860" height="248" class="alignnone size-full wp-image-666" /></a>
+![2015-03-05-12_08_00-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3](/images/2015-03-05-12_08_00-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png)
 - Then just set a breakpoint and you'll see the Variables tab being updated! You can even use Webstorm's console to send live events to the game engine.
-<a href="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_09_56-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png"><img src="http://www.equals-forty-two.com/blog/wp-content/uploads/2015/03/2015-03-05-12_09_56-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png" alt="2015-03-05 12_09_56-Stingray - [D__Engine42-WS] - D__Engine42_Game_Data_Boot.js - WebStorm 9.0.3" width="1587" height="885" class="alignnone size-full wp-image-667" /></a>
+![2015-03-05-12_09_56-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png](/images/2015-03-05-12_09_56-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png.png)
 
 I hope you've find this useful! Don't hesitate to take a look at the full sources and ask some questions.
 
