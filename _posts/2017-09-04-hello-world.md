@@ -1,3 +1,9 @@
+---
+layout: post
+title: V8 integration in a game engine
+tags: [v8, game, engine, javascript, debugger]
+---
+
 First thing first, please read the [V8 Embedder's Guide](https://developers.google.com/v8/embed) to understand V8 base concepts. The following is a way to integrate V8 in a game engine.
 
 # Motivation
