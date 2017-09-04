@@ -1179,7 +1179,7 @@ The workflow is easy. Launch the game engine, once the debugger thread is active
 - Once connected, you'll the loaded scripts and the Connected to 127.0.0.1:42000 message.
 ![2015-03-05-12_08_00-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3](/images/2015-03-05-12_08_00-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png)
 - Then just set a breakpoint and you'll see the Variables tab being updated! You can even use Webstorm's console to send live events to the game engine.
-![2015-03-05-12_09_56-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png](/images/2015-03-05-12_09_56-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png.png)
+![2015-03-05-12_09_56-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3](/images/2015-03-05-12_09_56-Stingray-D__Engine42-WS-D__Engine42_Game_Data_Boot.js-WebStorm-9.0.3.png)
 
 I hope you've find this useful! Don't hesitate to take a look at the full sources and ask some questions.
 
