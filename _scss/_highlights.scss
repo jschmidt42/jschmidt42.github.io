@@ -17,12 +17,14 @@
  
 code {
   font-family: 'Courier', monospace;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1;
-  color: #222
+  color: #222;
+  display: block;
+  white-space: pre;
+  overflow-x: auto;
+  word-wrap: normal;
 }
-
-.highlight pre code { display: block; white-space: pre; overflow-x: auto; word-wrap: normal; }
  
 // Solarized Light Pygments 
 // Thanks https://gist.github.com/edwardhotchkiss/2005058
