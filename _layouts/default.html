@@ -17,18 +17,17 @@
   </head>
 
   <body>
+    <a name="top"></a>
     <div class="wrapper-masthead">
       <div class="container">
         <header class="masthead clearfix">
 
-          {% if page.id %}  
-            <h3 class="site-description"><a href="{{ site.baseurl }}/">{{ site.description }}</a></h3>
+          {% if page.id %}
+            <h3 class="site-description-short"><a href="{{ site.baseurl }}/">{{ site.description }}</a></h3>
           {% else %}
             <a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.avatar }}" /></a>
             <h1 class="site-description"><a href="{{ site.baseurl }}/">{{ site.description }}</a></h1>
           {% endif %}
-
-          <a name="top"></a>
           
           <nav>
             <a href="{{ site.baseurl }}/about/">About</a>

@@ -302,6 +302,33 @@ form {
   }
 }
 
+.site-description-short {
+  float: left;
+  margin: 0;
+  margin-top: -7px;
+  max-width: 316px;
+  color: $transparentGray;
+  font-family: $merriweather;
+  font-weight: 300; 
+  font-size: 16px;
+  line-height: 1.7;
+  cursor: pointer;
+
+  a:hover {
+    text-decoration: none;
+    color:inherit;
+  }
+
+  a {
+    color: white;
+  }
+  
+  @include mobile {
+    float: none;
+    display: none;
+  }
+}
+
 nav {
   float: right;
   margin-top: 37px; // @TODO: Vertically middle align
