@@ -34,7 +34,7 @@
           <nav>
             <a href="{{ site.baseurl }}/about/">About</a>
             <a href="{{ site.baseurl }}/">Blog</a>
-            <a href="{{ site.baseurl }}/projects/">Projects</a>
+            <a href="http://github.com/{{ site.footer-links.github }}">Projects</a>
           </nav>
         </header>
       </div>
@@ -47,44 +47,27 @@
             </div>
             <div class="content col-md-2">
                 <h2>Stuff I wrote</h2>
-                <ul>
-                    {% assign currentYear = site.time | date: "%Y" %}
-                    {% assign currentMonth = site.time | date: "%B" %}
-                    {% for post in site.posts %}
-    
-                        {% assign postYear = post.date | date: "%Y" %}
-                        {% assign postMonth = post.date  | date: "%B" %}
-    
-                        {% if forloop.first %}
-                        <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}" aria-expanded="false" aria-controls="collapse{{ postYear }}">{{ postYear}}</a>
-                            <ul class="collapse in" id="collapse{{ postYear }}">
-                                <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}{{ postMonth }}" aria-expanded="false" aria-controls="collapse{{ postYear }}{{ postMonth}}">{{ postMonth}}</a>
-                                    <ul class="collapse in" id="collapse{{ postYear }}{{ postMonth }}">
+                {% for post in site.posts  %}
+                    {% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
+                    {% capture next_year %}{{ post.previous.date | date: "%Y" }}{% endcapture %}
+                
+                    {% if forloop.first %}
+                    <h2 id="{{ this_year }}-ref">{{this_year}}</h2>
+                    <ul>
+                    {% endif %}
+                
+                    <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
+                
+                    {% if forloop.last %}
+                    </ul>
+                    {% else %}
+                        {% if this_year != next_year %}
+                        </ul>
+                        <h2 id="{{ next_year }}-ref">{{next_year}}</h2>
+                        <ul>
                         {% endif %}
-    
-                        {% if (postYear == currentYear and postMonth == currentMonth) or forloop.first %}
-                            <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
-                        {% endif %}
-    
-                        {% if postYear == currentYear and postMonth != currentMonth %}
-                            </ul></li>
-                                <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}{{ postMonth }}" aria-expanded="false" aria-controls="collapse{{ postYear }}{{ postMonth}}">{{ postMonth}}</a>
-                                    <ul class="collapse" id="collapse{{ postYear }}{{ postMonth }}">
-                                    <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
-                        {% endif %}
-    
-                        {% if postYear != currentYear %}
-                            </ul></li></ul></li>
-                            <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}" aria-expanded="false" aria-controls="collapse{{ postYear }}">{{ postYear}}</a>
-                                <ul class="collapse" id="collapse{{ postYear }}">
-                                    <li><a role="button" data-toggle="collapse" href="#collapse{{ postYear }}{{ postMonth }}" aria-expanded="false" aria-controls="collapse{{ postYear }}{{ postMonth}}">{{ postMonth}}</a>
-                                        <ul class="collapse" id="collapse{{ postYear }}{{ postMonth }}">
-                                            <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
-                        {% endif %}
-                        {% assign currentYear = postYear %}
-                        {% assign currentMonth = postMonth %}
-                    {% endfor %}
-                </ul>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
