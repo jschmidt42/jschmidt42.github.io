@@ -1,9 +1,7 @@
 ---
-id: 36
+layout: post
 title: Haunted House
 date: 2010-11-12T22:58:21+00:00
-author: Jonathan
-layout: page
 guid: http://www.equals-forty-two.com/
 ---
 
